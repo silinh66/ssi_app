@@ -1,0 +1,24 @@
+.select-interval .ant-select-selector {
+  background-color: #202940 !important;
+}
+.select-interval .ant-select-selection-overflow-item {
+  color: white !important;
+}
+.select-interval .ant-select-selection-item-remove {
+  color: white !important;
+}
+.select-interval .ant-select-selection-item {
+  border: 1px solid white !important;
+}
+.select-interval .ant-select-selection-placeholder {
+  color: #bec1c7 !important;
+}
+.select-interval .ant-select-arrow {
+  color: white !important;
+}
+.ant-select-item-option-content {
+  /* color: white !important; */
+}
+.ant-select-item-option-selected .ant-select-item-option-content {
+  color: black !important;
+}
