@@ -34,6 +34,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDPagination from "components/MDPagination";
+import { makeStyles } from "@mui/styles";
 
 // Bot Trading Config React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
@@ -145,6 +146,23 @@ function DataTable({
     entriesEnd = pageSize * (pageIndex + 1);
   }
 
+  const useStyles = makeStyles({
+    tableRow: {
+      height: 100,
+    },
+    // tableCell: {
+    //   padding: "0px 16px"
+    // }
+  });
+
+  const classes = useStyles();
+
+  // const StyledTableRow = withStyles((theme) => ({
+  //   root: {
+  //     height: 30,
+  //   },
+  // }))(TableRow);
+
   return (
     <TableContainer style={{ maxHeight: 600 }} sx={{ boxShadow: "none" }}>
       {entriesPerPage || canSearch ? (
@@ -183,7 +201,7 @@ function DataTable({
           )}
         </MDBox>
       ) : null}
-      <Table stickyHeader {...getTableProps()}>
+      <Table rowHeight={200} stickyHeader {...getTableProps()}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup, key) => (
             <TableRow key={key} {...headerGroup.getHeaderGroupProps()}>
@@ -205,7 +223,7 @@ function DataTable({
           {page.map((row, key) => {
             prepareRow(row);
             return (
-              <TableRow key={key} {...row.getRowProps()}>
+              <TableRow className={classes.tableRow} key={key} {...row.getRowProps()}>
                 {row.cells.map((cell, idx) => (
                   <DataTableBodyCell
                     key={idx}

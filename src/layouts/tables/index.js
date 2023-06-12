@@ -17,7 +17,7 @@ Coded by www.creative-tim.com
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import socketIOClient from "socket.io-client";
-import { isEqual, set } from "lodash";
+import { isEqual, map, set } from "lodash";
 
 // Bot Trading Config React components
 import MDBox from "components/MDBox";
@@ -71,10 +71,13 @@ function Tables() {
   const [width, setWidth] = useState(window.innerWidth);
   const [listSymbol, setListSymbol] = useState([]);
   const [taiSanRong, setTaiSanRong] = useState("");
+  const [taiSanRongSource, setTaiSanRongSource] = useState("");
   const [ruiRo, setRuiRo] = useState(0);
+  const [ruiRoSource, setRuiRoSource] = useState(0);
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
   }
+
   useEffect(() => {
     window.addEventListener("resize", handleWindowSizeChange);
     return () => {
@@ -90,13 +93,20 @@ function Tables() {
     axios.get(`${apiUrl}/input_quan_tri_von`).then((res) => {
       console.log("res", res.data.data);
       if (res.data.data === null) return;
-      if (!!res.data.data.tai_san_rong) setTaiSanRong(res.data.data.tai_san_rong);
-      if (!!res.data.data.rui_ro) setRuiRo(res.data.data.rui_ro);
+      if (!!res.data.data.tai_san_rong) {
+        setTaiSanRong(res.data.data.tai_san_rong);
+        setTaiSanRongSource(res.data.data.tai_san_rong);
+      }
+      if (!!res.data.data.rui_ro) {
+        setRuiRo(res.data.data.rui_ro);
+        setRuiRoSource(res.data.data.rui_ro);
+      }
     });
     axios.get(`${apiUrl}/quan_tri_von`).then((res) => {
       console.log("res", res.data.data);
       if (res.data.data === null) return;
       setData(res.data.data);
+      setDataChangeUpdate(res.data.data);
     });
     setListSymbol([]);
     setEditingKey("");
@@ -108,15 +118,15 @@ function Tables() {
 
   const isMobile = width <= 1190;
 
-  useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-    socket.on("FromAPI", (newData) => {
-      if (isEqual(dataRealtime, newData)) return;
-      // setDataRealtime(newData);
-    });
+  // useEffect(() => {
+  //   const socket = socketIOClient(ENDPOINT);
+  //   socket.on("FromAPI", (newData) => {
+  //     if (isEqual(dataRealtime, newData)) return;
+  //     // setDataRealtime(newData);
+  //   });
 
-    return () => socket.disconnect();
-  }, []);
+  //   return () => socket.disconnect();
+  // }, []);
 
   const [message, setMessage] = useState("");
 
@@ -135,7 +145,7 @@ function Tables() {
       color="success"
       icon="check"
       title="Thông báo"
-      content="Cập nhật thông số thành công"
+      content={message}
       dateTime="1 second ago"
       open={successSB}
       onClose={closeSuccessSB}
@@ -174,6 +184,7 @@ function Tables() {
       })
       .then((res) => {
         if (!res.error) {
+          setMessage("Cập nhật thông số thành công");
           openSuccessSB();
           onRefresh();
         }
@@ -202,6 +213,7 @@ function Tables() {
       })
       .then((res) => {
         if (!res.error) {
+          setMessage("Thêm mã thành công");
           openSuccessSB();
           onRefresh();
         }
@@ -228,19 +240,73 @@ function Tables() {
 
   const onSubmitUpdate = (record) => {
     console.log("record: ", record);
+    console.log("taiSanRong: ", taiSanRong);
+    console.log("ruiRo: ", ruiRo);
+    console.log("record.price: ", record.price);
+    console.log("record.stoploss: ", record.stoploss);
+    let khoi_luong = (+taiSanRong * +ruiRo) / 100 / (+record.price - +record.stoploss);
+    khoi_luong = Math.floor(khoi_luong);
+    let gia_von = +record.price * khoi_luong;
+    console.log("khoi_luong: ", khoi_luong);
     axios
       .put(`${apiUrl}/quan_tri_von`, {
         data: {
           symbol: record.symbol,
-          gia_von: record.gia_von,
+          gia_von,
           stoploss: record.stoploss,
-          khoi_luong: record.khoi_luong,
+          khoi_luong,
           price: record.price,
           volume: record.volume,
         },
       })
       .then((res) => {
         if (!res.error) {
+          setMessage("Cập nhật thông số thành công");
+          openSuccessSB();
+          onRefresh();
+        }
+      });
+  };
+
+  const onCancelEdit = (record) => {
+    const newData = map(dataChangeUpdate, (item, index) => {
+      if (item.id === record.id) {
+        return {
+          ...data[index],
+        };
+      } else {
+        return { ...item };
+      }
+    });
+    setEditingKey("");
+    setDataChangeUpdate(newData);
+  };
+
+  const onChangeStopLoss = (value, record) => {
+    const newData = map(dataChangeUpdate, (item) => {
+      if (item.id === record.id) {
+        return {
+          ...item,
+          stoploss: value,
+        };
+      } else {
+        return { ...item };
+      }
+    });
+    setDataChangeUpdate(newData);
+  };
+
+  const onDelete = (record) => {
+    console.log("record: ", record);
+    axios
+      .delete(`${apiUrl}/quan_tri_von`, {
+        data: {
+          symbol: record.symbol,
+        },
+      })
+      .then((res) => {
+        if (!res.error) {
+          setMessage("Xóa mã thành công");
           openSuccessSB();
           onRefresh();
         }
@@ -252,13 +318,17 @@ function Tables() {
     { Header: "Mã", accessor: "symbol", width: "10%", align: "left" },
     { Header: "Giá hiện tại", accessor: "price", align: "left" },
     { Header: "Giá vốn", accessor: "gia_von", align: "left" },
-    { Header: "Cắt lỗ", accessor: "stoploss", align: "left" },
+    { Header: "Cắt lỗ", accessor: "stoploss", width: "15%", align: "center" },
     { Header: "Khối lượng", accessor: "volume", align: "center" },
-    { Header: "Khối lượng khuyến nghị", width: "20%", accessor: "khoi_luong", align: "center" },
+    { Header: "Khối lượng khuyến nghị", width: "12%", accessor: "khoi_luong", align: "center" },
     { Header: "Action", accessor: "action", align: "center" },
   ];
 
-  const rows = data.map((item) => {
+  const rows = dataChangeUpdate.map((item) => {
+    let khoi_luong = (+taiSanRongSource * +ruiRoSource) / 100 / (+item.price - +item.stoploss);
+    khoi_luong = Math.floor(khoi_luong);
+    let gia_von = +item.price * khoi_luong;
+    let itemSource = data.find((i) => i.symbol === item.symbol);
     return {
       symbol: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
@@ -277,33 +347,48 @@ function Tables() {
       ),
       price: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          {item.price}
+          {item.price ? String(item.price).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
         </MDTypography>
       ),
       volume: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          {item.volume}
+          {item.volume ? String(item.volume).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
         </MDTypography>
       ),
       stoploss: _isEditing(item) ? (
         <TextField
-          type="number"
+          style={{ width: "100px" }}
+          // type="number"
           id="outlined-basic"
           label="Value"
           variant="outlined"
-          // value={ruiRo}
-          // onChange={(e) => {
-          //   setRuiRo(e.target.value);
-          // }}
+          value={item.stoploss ? String(item.stoploss).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
+          onChange={(e) => {
+            let value = e.target.value.replace(/\,/g, "");
+            onChangeStopLoss(value, item);
+          }}
         />
       ) : (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          {item.stoploss}
+          {item.stoploss ? item.stoploss.replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
+        </MDTypography>
+      ),
+      khoi_luong: (
+        <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+          {/* {item.khoi_luong ? String(item.khoi_luong).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""} */}
+          {itemSource.stoploss ? String(khoi_luong).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
+        </MDTypography>
+      ),
+      gia_von: (
+        <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+          {/* {item.gia_von ? String(item.gia_von).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""} */}
+          {itemSource.stoploss ? String(gia_von).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
         </MDTypography>
       ),
       action: _isEditing(item) ? (
         <MDBox display="flex" justifyContent="center">
           <MDButton
+            style={{ marginRight: 10 }}
             variant="outlined"
             color="success"
             size="small"
@@ -312,6 +397,16 @@ function Tables() {
             }}
           >
             Lưu
+          </MDButton>
+          <MDButton
+            variant="outlined"
+            color="warning"
+            size="small"
+            onClick={() => {
+              onCancelEdit(item);
+            }}
+          >
+            Huỷ
           </MDButton>
         </MDBox>
       ) : (
@@ -322,7 +417,7 @@ function Tables() {
             color="error"
             size="small"
             onClick={() => {
-              console.log("delete");
+              onDelete(item);
             }}
           >
             Xoá
@@ -367,9 +462,9 @@ function Tables() {
                     id="outlined-basic"
                     label="Value"
                     variant="outlined"
-                    value={taiSanRong ? String(taiSanRong).replace(/(.)(?=(\d{3})+$)/g, "$1,") : 0}
+                    value={taiSanRong ? String(taiSanRong).replace(/(.)(?=(\d{3})+$)/g, "$1,") : ""}
                     onChange={(e) => {
-                      let value = e.target.value.replace(/\./g, "");
+                      let value = e.target.value.replace(/\,/g, "");
                       setTaiSanRong(value);
                     }}
                   />

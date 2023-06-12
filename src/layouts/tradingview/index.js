@@ -24,24 +24,24 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 // Bot Trading Config React example components
-import { Switch, TextField } from "@mui/material";
+import { Select } from "antd";
 import axios from "axios";
+import MDSnackbar from "components/MDSnackbar";
 import { apiUrl } from "constants/api";
+import { useMaterialUIController } from "context";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { Button, Select } from "antd";
-import { useMaterialUIController } from "context";
+import { createGlobalStyle } from "styled-components";
+import TradingViewWidget from "./TradingView";
 const { Option } = Select;
-const listIntervals = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d", "3d", "1w", "1M"];
+const listIntervals = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "12h", "1d", "3d", "1w", "1M"];
 let childrenInterval = [];
 for (let i = 0; i < listIntervals.length; i++) {
   childrenInterval.push(<Option key={listIntervals[i]}>{listIntervals[i]}</Option>);
 }
-import { createGlobalStyle } from "styled-components";
-import MDSnackbar from "components/MDSnackbar";
 
-function Config() {
+function TradingView() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   //   console.log("darkMode: ", darkMode);
@@ -169,159 +169,20 @@ function Config() {
       {renderSuccessSB}
       <GlobalStyles />
       <DashboardNavbar />
-      <MDBox mt={6} mb={3}>
+      <TradingViewWidget />
+
+      {/* <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
             <Card style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               <MDBox p={2}>
                 <MDTypography variant="h5">Cài đặt thông số bot</MDTypography>
               </MDBox>
-              <MDBox pt={2} px={2}>
-                <div style={styles.timePicker}>
-                  <MDTypography
-                    style={{ width: "100px" }}
-                    variant="button"
-                    color="text"
-                    fontWeight="regular"
-                  >
-                    Chỉ số MA
-                  </MDTypography>
-                  <Switch
-                    style={styles.switch}
-                    // defaultChecked
-                    checked={MA}
-                    onChange={(e) => {
-                      onChangeValue("MA", e.target.checked);
-                    }}
-                  />
-                  <TextField
-                    style={styles.numberInput}
-                    type="number"
-                    id="outlined-basic"
-                    label="Value"
-                    variant="outlined"
-                    // defaultValue={0}
-                    disabled={!MA}
-                    value={MAValue}
-                    onChange={(e) => {
-                      onChangeValueWithInput("MAValue", e.target.value);
-                    }}
-                  />
-                </div>
-              </MDBox>
-              <MDBox pt={2} px={2}>
-                <div style={styles.timePicker}>
-                  <MDTypography
-                    style={{ width: "100px" }}
-                    variant="button"
-                    color="text"
-                    fontWeight="regular"
-                  >
-                    Chỉ số RSI
-                  </MDTypography>
-                  <Switch
-                    style={styles.switch}
-                    // defaultChecked
-                    checked={RSI}
-                    onChange={(e) => {
-                      onChangeValue("RSI", e.target.checked);
-                    }}
-                  />
-                  <TextField
-                    style={styles.numberInput}
-                    type="number"
-                    id="outlined-basic"
-                    label="Value"
-                    variant="outlined"
-                    // defaultValue={0}
-                    disabled={!RSI}
-                    value={RSIValue}
-                    onChange={(e) => {
-                      onChangeValueWithInput("RSIValue", e.target.value);
-                    }}
-                  />
-                </div>
-              </MDBox>
-              <MDBox pt={2} px={2}>
-                <div style={styles.timePicker}>
-                  <MDTypography
-                    style={{ width: "100px" }}
-                    variant="button"
-                    color="text"
-                    fontWeight="regular"
-                  >
-                    Chỉ số MACD
-                  </MDTypography>
-                  <Switch
-                    style={styles.switch}
-                    // defaultChecked
-                    checked={MACD}
-                    onChange={(e) => {
-                      onChangeValue("MACD", e.target.checked);
-                    }}
-                  />
-                  <TextField
-                    style={styles.numberInput}
-                    type="number"
-                    id="outlined-basic"
-                    label="Value"
-                    variant="outlined"
-                    // defaultValue={0}
-                    disabled={!MACD}
-                    value={MACDValue}
-                    onChange={(e) => {
-                      onChangeValueWithInput("MACDValue", e.target.value);
-                    }}
-                  />
-                </div>
-              </MDBox>
-              <MDBox pt={2} px={2}>
-                {/* <div style={styles.timePicker}> */}
-                <MDTypography
-                  style={{ width: "100px" }}
-                  variant="button"
-                  color="text"
-                  fontWeight="regular"
-                >
-                  Khung
-                </MDTypography>
-                <Select
-                  dropdownStyle={{
-                    backgroundColor: darkMode ? "#202940" : "#fff",
-                    textColor: "red",
-                  }}
-                  className={darkMode ? "select-interval" : ""}
-                  mode="multiple"
-                  allowClear
-                  style={{
-                    width: isMobile ? "72%" : "220px",
-                    marginLeft: isMobile ? "12px" : "60px",
-                    marginRight: isMobile ? "0" : "36px",
-                  }}
-                  placeholder="Chọn khung thời gian"
-                  value={listInterval}
-                  onChange={onChangeInterval}
-                >
-                  {childrenInterval}
-                </Select>
-                {/* </div> */}
-              </MDBox>
-              <MDBox pt={2} px={2}>
-                <Button
-                  size="large"
-                  style={styles.buttonActive}
-                  type=""
-                  onClick={() => {
-                    onSave();
-                  }}
-                >
-                  <p style={styles.textButtonActive}>LƯU</p>
-                </Button>
-              </MDBox>
+              
             </Card>
           </Grid>
         </Grid>
-      </MDBox>
+      </MDBox> */}
       <Footer />
     </DashboardLayout>
   );
@@ -406,4 +267,4 @@ const styles = {
   },
 };
 
-export default Config;
+export default TradingView;

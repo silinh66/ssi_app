@@ -48,6 +48,7 @@ import SignUp from "layouts/authentication/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Config from "layouts/config";
+import TradingView from "layouts/tradingview";
 
 const routes = [
   {
@@ -92,12 +93,20 @@ const routes = [
   // },
   {
     type: "collapse",
-    name: "Thông báo",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
+    name: "Trading View",
+    key: "trading_view",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/tradingView",
+    component: <TradingView />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Thông báo",
+  //   key: "notifications",
+  //   icon: <Icon fontSize="small">bar_chart</Icon>,
+  //   route: "/notifications",
+  //   component: <Notifications />,
+  // },
   {
     type: "collapse",
     name: "Cá nhân",
