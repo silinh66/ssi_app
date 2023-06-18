@@ -72,8 +72,8 @@ const routes = [
   {
     type: "collapse",
     name: "Lọc chỉ số",
-    key: "tables",
-    icon: <Icon fontSize="small">table_view</Icon>,
+    key: "filter",
+    icon: <Icon fontSize="small">filter_alt</Icon>,
     route: "/filter",
     component: <Filter />,
   },
