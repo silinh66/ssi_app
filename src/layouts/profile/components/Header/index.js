@@ -35,7 +35,7 @@ import MDAvatar from "components/MDAvatar";
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
-import burceMars from "assets/images/bruce-mars.jpg";
+import burceMars from "assets/images/ava.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
 function Header({ children }) {
@@ -99,10 +99,10 @@ function Header({ children }) {
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
               <MDTypography variant="h5" fontWeight="medium">
-                Richard Davis
+                Hoàng Vinh
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="regular">
-                CEO / Co-Founder
+                Cố Vấn Đầu Tư Bền Vững & Quản Lý Tài Sản
               </MDTypography>
             </MDBox>
           </Grid>

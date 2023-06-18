@@ -42,9 +42,9 @@ import PlatformSettings from "layouts/profile/components/PlatformSettings";
 import profilesListData from "layouts/profile/data/profilesListData";
 
 // Images
-import homeDecor1 from "assets/images/home-decor-1.jpg";
-import homeDecor2 from "assets/images/home-decor-2.jpg";
-import homeDecor3 from "assets/images/home-decor-3.jpg";
+import homeDecor1 from "assets/images/project1.jpg";
+import homeDecor2 from "assets/images/project2.jpg";
+import homeDecor3 from "assets/images/project3.jpg";
 import homeDecor4 from "assets/images/home-decor-4.jpeg";
 import team1 from "assets/images/team-1.jpg";
 import team2 from "assets/images/team-2.jpg";
@@ -66,21 +66,21 @@ function Overview() {
               <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
               <ProfileInfoCard
                 title="profile information"
-                description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+                description="Xin chào, tôi là Hoàng Vinh - Cố vấn Đầu tư Bền vững & Quản lý Tài sản. Với sự đam mê và kiến thức chuyên sâu về lĩnh vực này, tôi đã tận hưởng hành trình hỗ trợ khách hàng xây dựng các chiến lược đầu tư bền vững và quản lý tài sản hiệu quả."
                 info={{
-                  fullName: "Alec M. Thompson",
-                  mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
-                  location: "USA",
+                  fullName: "Hoàng Vinh",
+                  mobile: "0395966899",
+                  email: "tacdattacvang.com.vn@gmail.com",
+                  location: "VN",
                 }}
                 social={[
                   {
-                    link: "https://www.youtube.com/@hoangvinhtacdattacvang",
+                    link: "https://www.facebook.com/profile.php?id=100047330494208",
                     icon: <FacebookIcon />,
                     color: "facebook",
                   },
                   {
-                    link: "https://www.youtube.com/@hoangvinhtacdattacvang",
+                    link: "https://www.tiktok.com/@hoangvinhchi",
                     icon: <TwitterIcon />,
                     color: "twitter",
                   },
@@ -102,11 +102,11 @@ function Overview() {
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
           <MDTypography variant="h6" fontWeight="medium">
-            Projects
+            Dự án
           </MDTypography>
           <MDBox mb={1}>
             <MDTypography variant="button" color="text">
-              Architects design houses
+              Cố Vấn Đầu Tư Bền Vững & Quản Lý Tài Sản
             </MDTypography>
           </MDBox>
         </MDBox>
@@ -116,13 +116,14 @@ function Overview() {
               <DefaultProjectCard
                 image={homeDecor1}
                 label="project #2"
-                title="modern"
-                description="As Uber works through a huge amount of internal management turmoil."
+                title="Đầu tư bền vững"
+                description="Fed tăng lãi suất thêm 0,25% trong tháng 2 là kịch bản không có gì mới.
+                Kế hoạch năm 2023 này thì vẫn là chịu khó tìm tài sản mà mua 😆🇻🇳."
                 action={{
                   type: "internal",
                   route: "/pages/profile/profile-overview",
                   color: "info",
-                  label: "view project",
+                  label: "Xem dự án",
                 }}
                 authors={[
                   { image: team1, name: "Elena Morison" },
@@ -136,13 +137,15 @@ function Overview() {
               <DefaultProjectCard
                 image={homeDecor2}
                 label="project #1"
-                title="scandinavian"
-                description="Music is something that everyone has their own specific opinion about."
+                title="Đầu tư bền vững"
+                description="Cảm ơn anh chị em đầu tư, nhiều anh chị từ tỉnh xa về Hà Nội.. thật sự em rất trân trọng. 
+                Hi vọng buổi cafe nói chuyện có ích và ý nghĩa với mọi người. 
+                Chúc anh chị em đầu tư thắng lợi ❤️❤️❤️"
                 action={{
                   type: "internal",
                   route: "/pages/profile/profile-overview",
                   color: "info",
-                  label: "view project",
+                  label: "Xem dự án",
                 }}
                 authors={[
                   { image: team3, name: "Nick Daniel" },
@@ -156,13 +159,13 @@ function Overview() {
               <DefaultProjectCard
                 image={homeDecor3}
                 label="project #3"
-                title="minimalist"
-                description="Different people have different taste, and various types of music."
+                title="Đầu tư bền vững"
+                description="Dạo này lên văn phòng thấy team chứng khoán mặt sáng hẳn lên 😂😂"
                 action={{
                   type: "internal",
                   route: "/pages/profile/profile-overview",
                   color: "info",
-                  label: "view project",
+                  label: "Xem dự án",
                 }}
                 authors={[
                   { image: team4, name: "Peterson" },
@@ -176,13 +179,14 @@ function Overview() {
               <DefaultProjectCard
                 image={homeDecor4}
                 label="project #4"
-                title="gothic"
-                description="Why would anyone pick blue over pink? Pink is obviously a better color."
+                title="Đầu tư bền vững"
+                description="Cảm ơn anh chị em đầu tư ở Sài Gòn, nhiều anh chị từ Vũng Tàu, Đà Lạt.. chạy lên mình thật sự rất trân trọng. Hi vọng buổi nói chuyện về đầu tư hôm nay có ích và ý nghĩa với mọi người. 
+                Chúc anh chị em đầu tư thắng lợi ❤️❤️❤️"
                 action={{
                   type: "internal",
                   route: "/pages/profile/profile-overview",
                   color: "info",
-                  label: "view project",
+                  label: "Xem dự án",
                 }}
                 authors={[
                   { image: team4, name: "Peterson" },

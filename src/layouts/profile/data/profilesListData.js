@@ -23,8 +23,8 @@ import team4 from "assets/images/team-4.jpg";
 export default [
   {
     image: kal,
-    name: "Sophie B.",
-    description: "Hi! I need more information..",
+    name: "Linh Nguyễn",
+    description: "Xin chào! Tôi muốn tìm hiểu về đầu tư chứng khoán",
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
@@ -34,8 +34,8 @@ export default [
   },
   {
     image: marie,
-    name: "Anne Marie",
-    description: "Awesome work, can you..",
+    name: "Tik",
+    description: "Đầu tư đem lại cho tôi thu nhập ổn định",
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
@@ -45,8 +45,8 @@ export default [
   },
   {
     image: ivana,
-    name: "Ivanna",
-    description: "About files I can..",
+    name: "Minh Thành",
+    description: "Chào bạn! Tôi đang tìm hiểu về đầu tư chứng khoán",
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
@@ -56,8 +56,8 @@ export default [
   },
   {
     image: team4,
-    name: "Peterson",
-    description: "Have a great afternoon..",
+    name: "Bắc Nguyễn",
+    description: "Xin chào tôi là nhà đầu tư bất động sản",
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
@@ -67,8 +67,8 @@ export default [
   },
   {
     image: team3,
-    name: "Nick Daniel",
-    description: "Hi! I need more information..",
+    name: "Ngọc Long",
+    description: "Tôi là nhiếp ảnh gia và đam mê đầu tư",
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",

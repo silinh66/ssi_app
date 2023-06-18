@@ -73,6 +73,7 @@ function Tables() {
   const [taiSanRong, setTaiSanRong] = useState("");
   const [taiSanRongSource, setTaiSanRongSource] = useState("");
   const [ruiRo, setRuiRo] = useState(0);
+  const [catLo, setCatLo] = useState(0);
   const [ruiRoSource, setRuiRoSource] = useState(0);
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -91,7 +92,6 @@ function Tables() {
 
   const onRefresh = () => {
     axios.get(`${apiUrl}/input_quan_tri_von`).then((res) => {
-      console.log("res", res.data.data);
       if (res.data.data === null) return;
       if (!!res.data.data.tai_san_rong) {
         setTaiSanRong(res.data.data.tai_san_rong);
@@ -103,7 +103,6 @@ function Tables() {
       }
     });
     axios.get(`${apiUrl}/quan_tri_von`).then((res) => {
-      console.log("res", res.data.data);
       if (res.data.data === null) return;
       setData(res.data.data);
       setDataChangeUpdate(res.data.data);
@@ -192,7 +191,6 @@ function Tables() {
   };
 
   const addSymbol = () => {
-    console.log("listSymbol: ", listSymbol);
     if (listSymbol.length === 0) {
       setMessage("Vui lòng chọn mã");
       openWarningSB();
@@ -201,7 +199,6 @@ function Tables() {
     const filteredArray = listSymbol.filter((value) =>
       data.map((item) => item.symbol).includes(value)
     );
-    console.log("filteredArray: ", filteredArray);
     if (filteredArray.length > 0) {
       setMessage(`Mã (${filteredArray}) đã tồn tại`);
       openWarningSB();
@@ -225,7 +222,6 @@ function Tables() {
   };
 
   const _onChangeEditingKey = (record) => {
-    console.log("record: ", record);
     // const newData = map(dataChangeUpdate, (item, index) => {
     //   if (item.id === this.state.id) {
     //     return {
@@ -239,15 +235,9 @@ function Tables() {
   };
 
   const onSubmitUpdate = (record) => {
-    console.log("record: ", record);
-    console.log("taiSanRong: ", taiSanRong);
-    console.log("ruiRo: ", ruiRo);
-    console.log("record.price: ", record.price);
-    console.log("record.stoploss: ", record.stoploss);
     let khoi_luong = (+taiSanRong * +ruiRo) / 100 / (+record.price - +record.stoploss);
     khoi_luong = Math.floor(khoi_luong);
     let gia_von = +record.price * khoi_luong;
-    console.log("khoi_luong: ", khoi_luong);
     axios
       .put(`${apiUrl}/quan_tri_von`, {
         data: {
@@ -297,7 +287,6 @@ function Tables() {
   };
 
   const onDelete = (record) => {
-    console.log("record: ", record);
     axios
       .delete(`${apiUrl}/quan_tri_von`, {
         data: {
@@ -450,7 +439,7 @@ function Tables() {
               <MDBox pt={2} px={2}>
                 <div style={styles.timePicker}>
                   <MDTypography
-                    style={{ width: "100px" }}
+                    style={{ width: "120px" }}
                     variant="button"
                     color="text"
                     fontWeight="regular"
@@ -474,12 +463,12 @@ function Tables() {
               <MDBox pt={2} px={2}>
                 <div style={styles.timePicker}>
                   <MDTypography
-                    style={{ width: "100px" }}
+                    style={{ width: "120px" }}
                     variant="button"
                     color="text"
                     fontWeight="regular"
                   >
-                    Rủi ro/lệnh (%)
+                    Rủi ro lệnh trên tổng tài sản (%)
                   </MDTypography>
                   <TextField
                     style={styles.numberInput}
@@ -490,6 +479,29 @@ function Tables() {
                     value={ruiRo}
                     onChange={(e) => {
                       setRuiRo(e.target.value);
+                    }}
+                  />
+                </div>
+              </MDBox>
+              <MDBox pt={2} px={2}>
+                <div style={styles.timePicker}>
+                  <MDTypography
+                    style={{ width: "120px" }}
+                    variant="button"
+                    color="text"
+                    fontWeight="regular"
+                  >
+                    Cắt lỗ (%)
+                  </MDTypography>
+                  <TextField
+                    style={styles.numberInput}
+                    type="number"
+                    id="outlined-basic"
+                    label="Value"
+                    variant="outlined"
+                    value={catLo}
+                    onChange={(e) => {
+                      setCatLo(e.target.value);
                     }}
                   />
                 </div>
@@ -507,8 +519,8 @@ function Tables() {
                   mode="multiple"
                   allowClear
                   style={{
-                    width: isMobile ? "182px" : "182px",
-                    marginLeft: isMobile ? "60px" : "61px",
+                    width: isMobile ? "185px" : "187px",
+                    marginLeft: isMobile ? "80px" : "81px",
                     marginRight: isMobile ? "0" : "36px",
                   }}
                   placeholder="Chọn mã"

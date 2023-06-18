@@ -49,6 +49,8 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 import Config from "layouts/config";
 import TradingView from "layouts/tradingview";
+import BarChart from "layouts/chart";
+import Filter from "layouts/filter";
 
 const routes = [
   {
@@ -69,11 +71,35 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Cài đặt",
+    name: "Lọc chỉ số",
+    key: "tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/filter",
+    component: <Filter />,
+  },
+  {
+    type: "collapse",
+    name: "Bot báo chỉ số",
     key: "config",
     icon: <Icon fontSize="small">toggle_on</Icon>,
     route: "/config",
     component: <Config />,
+  },
+  {
+    type: "collapse",
+    name: "Báo cáo tài chính",
+    key: "chart",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+    route: "/chart",
+    component: <BarChart />,
+  },
+  {
+    type: "collapse",
+    name: "Biểu đồ",
+    key: "tradingView",
+    icon: <Icon fontSize="small">trending_up</Icon>,
+    route: "/tradingView",
+    component: <TradingView />,
   },
   {
     type: "collapse",
@@ -91,14 +117,7 @@ const routes = [
   //   route: "/rtl",
   //   component: <RTL />,
   // },
-  {
-    type: "collapse",
-    name: "Trading View",
-    key: "trading_view",
-    icon: <Icon fontSize="small">bar_chart</Icon>,
-    route: "/tradingView",
-    component: <TradingView />,
-  },
+
   // {
   //   type: "collapse",
   //   name: "Thông báo",

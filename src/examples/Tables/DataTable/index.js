@@ -201,7 +201,7 @@ function DataTable({
           )}
         </MDBox>
       ) : null}
-      <Table rowHeight={200} stickyHeader {...getTableProps()}>
+      <Table stickyHeader {...getTableProps()}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup, key) => (
             <TableRow key={key} {...headerGroup.getHeaderGroupProps()}>

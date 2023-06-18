@@ -22,3 +22,6 @@
 .ant-select-item-option-selected .ant-select-item-option-content {
   color: black !important;
 }
+body > iframe {
+  display: none;
+}

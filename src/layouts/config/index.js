@@ -44,7 +44,6 @@ import MDSnackbar from "components/MDSnackbar";
 function Config() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  //   console.log("darkMode: ", darkMode);
   const [width, setWidth] = useState(window.innerWidth);
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -92,14 +91,12 @@ function Config() {
 
   useEffect(() => {
     axios.get(`${apiUrl}/getConfig`).then((res) => {
-      //   console.log("res", res.data.data);
       setState(res.data.data);
     });
   }, []);
 
   const onChangeValue = (field, checked) => {
     setState((prevState) => ({ ...prevState, [field]: checked }));
-    // console.log(`${field} switch to ${checked}`);
   };
 
   const onChangeInterval = (data) => {
@@ -125,11 +122,9 @@ function Config() {
   );
 
   const onSave = () => {
-    // console.log("Result: ", state);
     const body = { data: state };
     axios.post(`${apiUrl}/config`, body).then((res) => {
       if (!res.error) {
-        // console.log("success");
         openSuccessSB();
       }
     });
@@ -201,7 +196,7 @@ function Config() {
                     label="Value"
                     variant="outlined"
                     // defaultValue={0}
-                    disabled={!MA}
+                    disabled={true}
                     value={MAValue}
                     onChange={(e) => {
                       onChangeValueWithInput("MAValue", e.target.value);
