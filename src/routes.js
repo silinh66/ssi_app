@@ -50,7 +50,8 @@ import Icon from "@mui/material/Icon";
 import Config from "layouts/config";
 import TradingView from "layouts/tradingview";
 import BarChart from "layouts/chart";
-import Filter from "layouts/filter";
+import Filter from "layouts/filter/filter";
+// import Filter from "layouts/filter";
 
 const routes = [
   {
