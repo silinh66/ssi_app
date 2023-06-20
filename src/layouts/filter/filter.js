@@ -116,24 +116,52 @@ const NhomCoTuc = () => {
 
 const NhomChiBaoKyThuat = () => {
   const [open, setOpen] = useState(true);
+  const [listTieuChiPicked, setListTieuChiPicked] = useState([]);
+  const [isPickGiaSoDuongTbEma, setIsPickGiaSoDuongTbEma] = useState(false);
   const handleClick = () => {
     setOpen(!open);
+  };
+  const handlePick = (state, setState) => {
+    setState(!state);
   };
   return (
     <MDBox style={{ overflowY: "scroll", height: "260px" }}>
       <ListItemButton
-        style={{ display: "flex", justifyContent: "space-between" }}
+        style={{
+          display: "flex",
+          padding: 0,
+          paddingLeft: 3,
+          paddingRight: 3,
+          backgroundColor: "#1b1e2b",
+          justifyContent: "space-between",
+        }}
         onClick={handleClick}
       >
-        <MDTypography style={{ fontSize: 12, fontWeight: "bold" }} gutterBottom>
-          THEO ĐƯỜNG TB HÀM MŨ (EMA)
+        <MDTypography variant="h5" style={{ fontSize: 12, fontWeight: "bold" }}>
+          THEO ĐƯỜNG TB HÀM MŨ (EMA) <span style={{ color: "#9197B1" }}>(0/4)</span>
         </MDTypography>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <MDTypography style={{ fontSize: 12, fontWeight: "bold" }} gutterBottom>
-          Giá so với đường TB - EMA
-        </MDTypography>
+        <ListItemButton
+          style={{
+            display: "flex",
+            padding: 0,
+            paddingLeft: 3,
+            paddingRight: 3,
+            backgroundColor: "#1b1e2b",
+            justifyContent: "space-between",
+          }}
+          onClick={() => handlePick(isPickGiaSoDuongTbEma, setIsPickGiaSoDuongTbEma)}
+        >
+          <MDTypography
+            style={{ marginLeft: 5, color: "#9197B1", fontSize: 12, fontWeight: "bold" }}
+            gutterBottom
+          >
+            Giá so với đường TB - EMA
+          </MDTypography>
+          {isPickGiaSoDuongTbEma ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
       </Collapse>
       <MDTypography variant="h5" gutterBottom>
         Nhóm chỉ báo kỹ thuật
