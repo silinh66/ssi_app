@@ -469,15 +469,6 @@ const Filter = () => {
     setListTieuChiPicked(newListTieuChiPicked);
   };
 
-  const optionsCompare = [
-    "> lớn hơn",
-    "≥ lớn hơn hoặc bằng",
-    "= bằng",
-    "< nhỏ hơn",
-    "≤ nhỏ hơn hoặc bằng",
-  ];
-  const optionsENA = ["EMA(10)", "EMA(15)", "EMA(20)", "EMA(50)", "EMA(100)", "EMA(200)"];
-
   const IconRotate = styled(Icon)({
     "& > .material-icons-round": {
       transform: "rotate(90deg)",
