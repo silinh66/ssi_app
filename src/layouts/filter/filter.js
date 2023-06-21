@@ -1,41 +1,31 @@
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import styled from "@emotion/styled";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
-  Box,
   Card,
   Collapse,
-  Divider,
-  Drawer,
   FormControlLabel,
   Grid,
   Icon,
   InputBase,
-  List,
-  ListItem,
   ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Menu,
   MenuItem,
   Paper,
   Radio,
   RadioGroup,
-  Toolbar,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import list from "assets/theme/components/list";
 import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { set } from "lodash";
 import { useState } from "react";
 
 function InputSearch(props) {
   return (
     <Paper
       style={{ backgroundColor: "#1D1F2A", paddingTop: 10, paddingBottom: 4 }}
-      component="form"
       sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}
     >
       <InputBase
@@ -118,10 +108,7 @@ const NhomCoTuc = () => {
   );
 };
 
-const NhomChiBaoKyThuat = () => {
-  const [open, setOpen] = useState(true);
-  const [listTieuChiPicked, setListTieuChiPicked] = useState([]);
-  console.log("listTieuChiPicked: ", listTieuChiPicked);
+const NhomChiBaoKyThuat = ({ listTieuChiPicked, setListTieuChiPicked }) => {
   const [listOpenTieuChi, setListOpenTieuChi] = useState([]);
   const [isHover, setIsHover] = useState([]);
   const handleClick = (state) => {
@@ -135,12 +122,66 @@ const NhomChiBaoKyThuat = () => {
     }
   };
   const handlePick = (state) => {
-    if (listTieuChiPicked.includes(state)) {
+    if (listTieuChiPicked.map((item) => item?.label || null).includes(state)) {
       //remove state from listTieuChiPicked
-      let newListTieuChiPicked = listTieuChiPicked.filter((item) => item !== state);
+      let newListTieuChiPicked = listTieuChiPicked.filter((item) => item.label !== state);
       setListTieuChiPicked(newListTieuChiPicked);
     } else {
-      let newListTieuChiPicked = [...listTieuChiPicked, state];
+      let mapListTieuChiPicked = listTieuChiPicked.map((item) => {
+        if (item.label === "Giá so với đường TB - EMA") {
+          return {
+            label: state,
+            leftIndexValue: "",
+            leftIndexList: ["Giá"],
+            compare: 0,
+            compareList: [
+              "> lớn hơn",
+              "≥ lớn hơn hoặc bằng",
+              "= bằng",
+              "< nhỏ hơn",
+              "≤ nhỏ hơn hoặc bằng",
+            ],
+            rightIndexValue: 0,
+            rightIndexList: ["EMA(10)", "EMA(15)", "EMA(20)", "EMA(50)", "EMA(100)", "EMA(200)"],
+            interval: 0,
+            intervalList: ["1 ngày", "1 tuần"],
+          };
+        }
+        if (item.label === "Giá cắt đường TB - EMA") {
+          return {
+            label: state,
+            leftIndexValue: "",
+            leftIndexList: ["Giá"],
+            compare: 0,
+            compareList: ["Cắt xuống dưới", "Cắt lên trên"],
+            rightIndexValue: 0,
+            rightIndexList: ["EMA(10)", "EMA(15)", "EMA(20)", "EMA(50)", "EMA(100)", "EMA(200)"],
+            interval: 0,
+            intervalList: ["1 ngày", "1 tuần"],
+          };
+        }
+        return item;
+      });
+      let newListTieuChiPicked = [
+        ...listTieuChiPicked,
+        {
+          label: state,
+          leftIndexValue: "",
+          leftIndexList: ["Giá"],
+          compare: 0,
+          compareList: [
+            "> lớn hơn",
+            "≥ lớn hơn hoặc bằng",
+            "= bằng",
+            "< nhỏ hơn",
+            "≤ nhỏ hơn hoặc bằng",
+          ],
+          rightIndexValue: 0,
+          rightIndexList: ["EMA(10)", "EMA(15)", "EMA(20)", "EMA(50)", "EMA(100)", "EMA(200)"],
+          interval: 0,
+          intervalList: ["1 ngày", "1 tuần"],
+        },
+      ];
       setListTieuChiPicked(newListTieuChiPicked);
     }
   };
@@ -229,11 +270,11 @@ const NhomChiBaoKyThuat = () => {
     },
   ];
   return (
-    <MDBox style={{ overflowY: "scroll", height: "260px" }}>
+    <MDBox style={{ overflowY: "scroll", height: "250px" }}>
       {listTieuChi.map((item, index) => {
         let isOpen = listOpenTieuChi.includes(item.label);
         let numberOfPicked = listTieuChiPicked.filter((itemPicked) =>
-          item.dropdown.includes(itemPicked)
+          item.dropdown.includes(itemPicked.label)
         ).length;
         return (
           <div key={index} style={{ marginBottom: 4 }}>
@@ -277,7 +318,7 @@ const NhomChiBaoKyThuat = () => {
                     >
                       {item}
                     </MDTypography>
-                    {listTieuChiPicked.includes(item) ? (
+                    {listTieuChiPicked.map((item) => item?.label || null).includes(item) ? (
                       <Icon
                         onMouseEnter={() => {
                           setIsHover([item, true]);
@@ -309,6 +350,7 @@ const NhomChiBaoKyThuat = () => {
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState("nhomThongDung");
   const [tieuChiSearch, setTieuChiSearch] = useState("");
+  const [listTieuChiPicked, setListTieuChiPicked] = useState([]);
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -353,13 +395,55 @@ const Filter = () => {
     },
   ];
 
-  console.log(tieuChiSearch);
-
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [anchorElLeft, setAnchorElLeft] = useState(null);
+  const [anchorElRight, setAnchorElRight] = useState(null);
+  const [anchorElInterval, setAnchorElInterval] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const open = Boolean(anchorEl);
-  const handleClickListItem = (event) => {
+  const openLeft = Boolean(anchorElLeft);
+  const openRight = Boolean(anchorElRight);
+  const openInterval = Boolean(anchorElInterval);
+  let [currentChangeTieuChi, setCurrentChangeTieuChi] = useState({});
+  let [currentChangeTieuChiLeft, setCurrentChangeTieuChiLeft] = useState({});
+  let [currentChangeTieuChiRight, setCurrentChangeTieuChiRight] = useState({});
+  let [currentChangeTieuChiInterval, setCurrentChangeTieuChiInterval] = useState({});
+  const [isHoverClear, setIsHoverClear] = useState([]);
+  const [isHoverLeft, setIsHoverLeft] = useState([]);
+  const [isHoverRight, setIsHoverRight] = useState([]);
+  const [isHoverInterval, setIsHoverInterval] = useState([]);
+  const handleClickListItem = (event, item) => {
     setAnchorEl(event.currentTarget);
+    setCurrentChangeTieuChi(item);
+  };
+  const handleClickListItemLeft = (event, item) => {
+    setAnchorElLeft(event.currentTarget);
+    setCurrentChangeTieuChiLeft(item);
+  };
+  const handleClickListItemRight = (event, item) => {
+    setAnchorElRight(event.currentTarget);
+    setCurrentChangeTieuChiRight(item);
+  };
+  const handleClickListItemInterval = (event, item) => {
+    setAnchorElInterval(event.currentTarget);
+    setCurrentChangeTieuChiInterval(item);
+  };
+  const handleChangeSelectIndex = (tieuChiPicked, value, indexType) => {
+    let newListTieuChiPicked = listTieuChiPicked.map((item, index) => {
+      if (item.label === tieuChiPicked) {
+        return {
+          ...item,
+          [indexType]: value,
+        };
+      } else {
+        return item;
+      }
+    });
+    setListTieuChiPicked(newListTieuChiPicked);
+    setAnchorEl(null);
+    setAnchorElLeft(null);
+    setAnchorElRight(null);
+    setAnchorElInterval(null);
   };
 
   const handleMenuItemClick = (event, index) => {
@@ -370,8 +454,35 @@ const Filter = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleCloseLeft = () => {
+    setAnchorElLeft(null);
+  };
+  const handleCloseRight = () => {
+    setAnchorElRight(null);
+  };
+  const handleCloseInterval = () => {
+    setAnchorElInterval(null);
+  };
 
-  const options = ["≥ lớn hơn hoặc bằng", "= bằng", "< nhỏ hơn", "≤ nhỏ hơn hoặc bằng"];
+  const handleClearTieuChi = (state) => {
+    let newListTieuChiPicked = listTieuChiPicked.filter((item) => item.label !== state);
+    setListTieuChiPicked(newListTieuChiPicked);
+  };
+
+  const optionsCompare = [
+    "> lớn hơn",
+    "≥ lớn hơn hoặc bằng",
+    "= bằng",
+    "< nhỏ hơn",
+    "≤ nhỏ hơn hoặc bằng",
+  ];
+  const optionsENA = ["EMA(10)", "EMA(15)", "EMA(20)", "EMA(50)", "EMA(100)", "EMA(200)"];
+
+  const IconRotate = styled(Icon)({
+    "& > .material-icons-round": {
+      transform: "rotate(90deg)",
+    },
+  });
 
   return (
     <DashboardLayout>
@@ -417,7 +528,12 @@ const Filter = () => {
                         {selectedValue === "bienDongGia" && <BienDongGia />}
                         {selectedValue === "nhomCoBan" && <NhomCoBan />}
                         {selectedValue === "nhomCoTuc" && <NhomCoTuc />}
-                        {selectedValue === "nhomChiBaoKyThuat" && <NhomChiBaoKyThuat />}
+                        {selectedValue === "nhomChiBaoKyThuat" && (
+                          <NhomChiBaoKyThuat
+                            listTieuChiPicked={listTieuChiPicked}
+                            setListTieuChiPicked={setListTieuChiPicked}
+                          />
+                        )}
                       </MDBox>
                     </MDBox>
                   </Grid>
@@ -431,89 +547,310 @@ const Filter = () => {
                     Chọn giá trị
                   </MDTypography>
                 </MDBox>
-                <MDBox>
-                  <Paper
-                    style={{ backgroundColor: "#1D1F2A", paddingTop: 10, paddingBottom: 4 }}
-                    component="form"
-                    sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}
-                  >
-                    <Tooltip title=" Giá so với đường TB - EMA">
-                      <MDTypography
-                        style={{
-                          width: 300,
-                          marginLeft: 5,
-                          color: "#fff",
-                          fontSize: 12,
-                          fontWeight: "bold",
-                        }}
-                        sx={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "-webkit-box",
-                          WebkitLineClamp: "1",
-                          WebkitBoxOrient: "vertical",
-                        }}
-                        gutterBottom
-                      >
-                        Giá so với đường TB - EMA
-                      </MDTypography>
-                    </Tooltip>
-                    <Paper
-                      style={{
-                        backgroundColor: "#2D303D",
-                        paddingLeft: 5,
-                        paddingTop: 5,
-                        paddingBottom: 2,
-                      }}
-                      component="form"
-                      // sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}
-                    >
-                      <MDTypography
-                        style={{
-                          width: 200,
-                          color: "#fff",
-                          fontSize: 12,
-                          fontWeight: "bold",
-                        }}
-                        gutterBottom
-                      >
-                        Giá
-                      </MDTypography>
-                      <MDTypography
-                        style={{
-                          width: 200,
-                          color: "#fff",
-                          fontSize: 12,
-                          fontWeight: "bold",
-                        }}
-                        gutterBottom
-                      >
-                        &gt;
-                      </MDTypography>
-                      <Menu
-                        id="lock-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "lock-button",
-                          role: "listbox",
-                        }}
-                      >
-                        {options.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            selected={index === selectedIndex}
-                            onClick={(event) => handleMenuItemClick(event, index)}
+                <MDBox style={{ overflowY: "scroll", height: "280px" }}>
+                  {listTieuChiPicked.length > 0 &&
+                    listTieuChiPicked.map((item, index) => {
+                      return (
+                        <Paper
+                          key={index}
+                          style={{
+                            backgroundColor: index % 2 === 0 ? "#1D1F2A" : "#202940",
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                            marginBottom: 4,
+                            boxShadow: "none",
+                          }}
+                          sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}
+                        >
+                          <Tooltip title={item.label}>
+                            <MDTypography
+                              style={{
+                                width: 250,
+                                marginLeft: 5,
+                                color: "#fff",
+                                fontSize: 12,
+                                fontWeight: "bold",
+                                marginTop: 4,
+                              }}
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "1",
+                                WebkitBoxOrient: "vertical",
+                              }}
+                              gutterBottom
+                            >
+                              {item.label}
+                            </MDTypography>
+                          </Tooltip>
+                          <Paper
+                            style={{
+                              backgroundColor: "#2D303D",
+                              paddingLeft: 10,
+                              paddingTop: 6,
+                              paddingBottom: 0,
+                              marginRight: 4,
+                              height: 24,
+                            }}
+                            sx={{
+                              p: "2px 4px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
                           >
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                    </Paper>
+                            {/* Left Component */}
+                            {item.leftIndexList.length === 1 && (
+                              <MDTypography
+                                style={{
+                                  width: 120,
+                                  color: "#fff",
+                                  fontSize: 12,
+                                  fontWeight: "bold",
+                                }}
+                                gutterBottom
+                              >
+                                {item.leftIndexList[0]}
+                              </MDTypography>
+                            )}
 
-                    <Icon style={{ color: "#747990", fontSize: "4px" }}>clear</Icon>
-                  </Paper>
+                            {/* Compair Component */}
+                            {item.compareList.length > 0 && (
+                              <MDTypography
+                                style={{
+                                  width: 70,
+                                  height: 20,
+                                  position: "relative",
+                                  marginTop: item.compare === 1 || item.compare === 4 ? 8 : 12,
+                                  fontSize: item.compare === 1 || item.compare === 4 ? 17 : 20,
+                                  marginRight: 8,
+                                  color:
+                                    item.compare < 2
+                                      ? "#3CDC96"
+                                      : item.compare > 2
+                                      ? "#FF5858"
+                                      : "#FFA758",
+                                  fontWeight: "bold",
+                                  userSelect: "none",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  alignItems: "flex-end",
+                                }}
+                                gutterBottom
+                                onClick={(e) => {
+                                  handleClickListItem(e, item);
+                                }}
+                              >
+                                {item.compare === 0 && ">"}
+                                {item.compare === 1 && "≥"}
+                                {item.compare === 2 && "="}
+                                {item.compare === 3 && "<"}
+                                {item.compare === 4 && "≤"}
+                                <MDTypography
+                                  component={"span"}
+                                  style={{
+                                    fontSize: 10,
+                                    marginBottom: item.compare === 1 || item.compare === 4 ? 4 : 6,
+                                  }}
+                                >
+                                  <IconRotate style={{ marginLeft: 8 }}>
+                                    <Icon style={{ fontSize: 6, color: "#747990" }}>
+                                      switch_left
+                                    </Icon>
+                                  </IconRotate>
+                                </MDTypography>
+                              </MDTypography>
+                            )}
+
+                            {/* Right Component */}
+
+                            {item.rightIndexList.length > 0 && (
+                              <MDTypography
+                                onMouseEnter={() => {
+                                  setIsHoverRight([item, true]);
+                                }}
+                                onMouseLeave={() => {
+                                  setIsHoverRight([item, false]);
+                                }}
+                                style={{
+                                  color:
+                                    isHoverRight[1] && isHoverRight[0] === item
+                                      ? "#856DFC"
+                                      : "#fff",
+                                  width: 140,
+                                  fontWeight: "bold",
+                                  userSelect: "none",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  alignItems: "flex-end",
+                                  fontSize: 12,
+                                }}
+                                gutterBottom
+                                onClick={(e) => {
+                                  handleClickListItemRight(e, item);
+                                }}
+                              >
+                                {item.rightIndexList[item.rightIndexValue]}
+                                <MDTypography component={"span"} style={{ fontSize: 10 }}>
+                                  <IconRotate style={{ marginBottom: 0, marginLeft: 8 }}>
+                                    <Icon style={{ fontSize: 6, color: "#747990" }}>
+                                      switch_left
+                                    </Icon>
+                                  </IconRotate>
+                                </MDTypography>
+                              </MDTypography>
+                            )}
+
+                            {/* Interval Component */}
+                            {item.intervalList.length > 0 && (
+                              <MDTypography
+                                onMouseEnter={() => {
+                                  setIsHoverInterval([item, true]);
+                                }}
+                                onMouseLeave={() => {
+                                  setIsHoverInterval([item, false]);
+                                }}
+                                style={{
+                                  color:
+                                    isHoverInterval[1] && isHoverInterval[0] === item
+                                      ? "#856DFC"
+                                      : "#fff",
+                                  width: 140,
+                                  fontWeight: "bold",
+                                  userSelect: "none",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  alignItems: "flex-end",
+                                  fontSize: 12,
+                                }}
+                                gutterBottom
+                                onClick={(e) => {
+                                  handleClickListItemInterval(e, item);
+                                }}
+                              >
+                                {item.intervalList[item.interval]}
+                                <MDTypography component={"span"} style={{ fontSize: 10 }}>
+                                  <IconRotate style={{ marginBottom: 0, marginLeft: 8 }}>
+                                    <Icon style={{ fontSize: 6, color: "#747990" }}>
+                                      switch_left
+                                    </Icon>
+                                  </IconRotate>
+                                </MDTypography>
+                              </MDTypography>
+                            )}
+                          </Paper>
+
+                          <Icon
+                            onMouseEnter={() => {
+                              setIsHoverClear([item, true]);
+                            }}
+                            onMouseLeave={() => {
+                              setIsHoverClear([item, false]);
+                            }}
+                            style={{
+                              color:
+                                isHoverClear[1] && isHoverClear[0] === item ? "#856DFC" : "#9197B1",
+                              fontSize: "2px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              handleClearTieuChi(item.label);
+                            }}
+                          >
+                            clear
+                          </Icon>
+                        </Paper>
+                      );
+                    })}
+                  {/* Middle Menu Dropdown */}
+                  <Menu
+                    id="lock-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "lock-button",
+                      role: "listbox",
+                    }}
+                  >
+                    {currentChangeTieuChi.compareList?.map((option, index) => {
+                      return (
+                        <MenuItem
+                          key={option}
+                          selected={index === currentChangeTieuChi.compare}
+                          // onClick={(event) => handleMenuItemClick(event, index)}
+                          onClick={(e) => {
+                            handleChangeSelectIndex(currentChangeTieuChi.label, index, "compare");
+                          }}
+                        >
+                          {option}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                  {/* Right Menu Dropdown */}
+                  <Menu
+                    id="lock-menu"
+                    anchorEl={anchorElRight}
+                    open={openRight}
+                    onClose={handleCloseRight}
+                    MenuListProps={{
+                      "aria-labelledby": "lock-button",
+                      role: "listbox",
+                    }}
+                  >
+                    {currentChangeTieuChiRight.rightIndexList?.map((option, index) => {
+                      return (
+                        <MenuItem
+                          key={option}
+                          selected={index === currentChangeTieuChiRight.rightIndexValue}
+                          // onClick={(event) => handleMenuItemClick(event, index)}
+                          onClick={(e) => {
+                            handleChangeSelectIndex(
+                              currentChangeTieuChiRight.label,
+                              index,
+                              "rightIndexValue"
+                            );
+                          }}
+                        >
+                          {option}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                  {/* Interval Menu Dropdown */}
+                  <Menu
+                    id="lock-menu"
+                    anchorEl={anchorElInterval}
+                    open={openInterval}
+                    onClose={handleCloseInterval}
+                    MenuListProps={{
+                      "aria-labelledby": "lock-button",
+                      role: "listbox",
+                    }}
+                  >
+                    {currentChangeTieuChiInterval.intervalList?.map((option, index) => {
+                      return (
+                        <MenuItem
+                          key={option}
+                          selected={index === currentChangeTieuChiInterval.interval}
+                          // onClick={(event) => handleMenuItemClick(event, index)}
+                          onClick={(e) => {
+                            handleChangeSelectIndex(
+                              currentChangeTieuChiInterval.label,
+                              index,
+                              "interval"
+                            );
+                          }}
+                        >
+                          {option}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
                 </MDBox>
               </Card>
             </Grid>
